@@ -18,6 +18,8 @@ const utils = require('./lib/utils.js')
  * @param {*} robot
  */
 module.exports = (robot) => {
+  robot.log('Hello semantic-release-app!')
+
   robot.on('push', async (context) => {
     // console.log('cc1')
     // if (releasePublished === true) return
