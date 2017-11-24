@@ -21,7 +21,7 @@ module.exports = (robot) => {
   robot.on('push', async (context) => {
     // console.log('cc1')
     // if (releasePublished === true) return
-    console.log('cc2')
+    robot.log('cc2')
     if (context.payload.ref !== 'refs/heads/master') return
 
     const config = await getConfig(context)
@@ -29,7 +29,7 @@ module.exports = (robot) => {
     // Check if commit needs GitHub Release,
     // otherwise the bot should not do anything
     if (commit.increment) {
-      console.log('cc3')
+      robot.log('cc3')
       const passed = []
       const pending = []
       await release(context, config, { passed, pending })
@@ -55,7 +55,7 @@ function detectChange (context, config) {
     head,
     link,
   })
-  console.log('cc4', commit)
+  robot.log('cc4', commit)
 
   if (commit.increment === 'major' && commit.isBreaking) {
     return Object.assign(commit, { heading: config.majorHeading })
@@ -116,7 +116,7 @@ function shouldRelease (context, config) {
   const commit = detectChange(context, config)
 
   if (!commit.increment) {
-    console.log('no creating GitHub release')
+    robot.log('no creating GitHub release')
     return false
   }
 
@@ -154,7 +154,7 @@ async function createRelease (context, config, commit) {
     prerelease: false,
   })
 
-  console.log('done')
+  robot.log('done')
 
   return true
 }
@@ -171,7 +171,7 @@ async function getVersions (context, config, commit) {
   // TODO: Consider what to do when there are no tags. Fallback to npm?
   const currentVersion = lastTag.name.slice(1)
 
-  console.log('tag commit', lastTag.commit.url)
+  robot.log('tag commit', lastTag.commit.url)
 
   const nextVersion = semver.inc(currentVersion, commit.increment)
   return { currentVersion, nextVersion }
@@ -202,6 +202,6 @@ async function renderTemplate (context, config, opts) {
     compareLink,
   })
 
-  console.log('cc5', locals)
+  robot.log('cc5', locals)
   return handlebars.compile(template)(locals)
 }
