@@ -28,12 +28,16 @@ const defaultConfig = {
  *
  * @param {*} context
  */
-module.exports = async function getConfig (context) {
+module.exports = async function getConfig (context, robot) {
+  robot.log('getConfig')
   let config = null
 
   try {
+    robot.log('config .github/semantic-release.yml start')
     config = await context.config('.github/semantic-release.yml', defaultConfig)
+    robot.log('config .github/semantic-release.yml finish')
   } catch (err) {
+    robot.log(err)
     if (err.code !== 404) {
       throw err
     }
