@@ -21,9 +21,9 @@ module.exports = (robot) => {
   robot.log('Hello semantic-release-app!')
 
   robot.on('push', async (context) => {
-    // console.log('cc1')
+    //robot.log(`releasePublished: ${releasePublished}`);
     // if (releasePublished === true) return
-    robot.log('cc2')
+    robot.log(`context.payload.ref: ${context.payload.ref}`);
     if (context.payload.ref !== 'refs/heads/master') return
 
     const config = await getConfig(context)
