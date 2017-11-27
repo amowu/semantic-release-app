@@ -42,6 +42,10 @@ module.exports = async function getConfig (context, robot) {
       throw err
     }
   }
+  
+  const newConfig = Object.assign({}, defaultConfig, config);
+  
+  robot.log('newConfig', newConfig)
 
-  return Object.assign({}, defaultConfig, config)
+  return newConfig
 }
