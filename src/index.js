@@ -87,6 +87,7 @@ function detectChange (context, config, robot) {
  */
 async function release (context, config, cache, robot) {
   if (cache.passed.length && cache.passed.length === cache.pending.length) {
+    robot.log('shouldRelease')
     return shouldRelease(context, config, robot)
   }
 
@@ -96,9 +97,12 @@ async function release (context, config, cache, robot) {
   // Example: if you all checks ends in 1min,
   // only 6 requests are made, so don't worry.
   // The 6req/min is pretty pretty low amount when you have 5000req/hour.
+  robot.log('delay 8000 start')
   await delay(8000)
+  robot.log('delay 8000 finish')
 
   const statuses = await context.github.repos.getStatuses(utils.getRepo(context))
+  robot.log('statuses', statuses)
 
   statuses.data.forEach((x) => {
     const isCIStatus = /(?:travis|circleci)/.test(x.context)
