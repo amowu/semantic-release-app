@@ -117,7 +117,7 @@ async function release (context, config, cache, robot) {
     }
   })
 
-  return release(context, config, cache)
+  return release(context, config, cache, robot)
 }
 
 /**
@@ -143,7 +143,7 @@ function shouldRelease (context, config, robot) {
  * @param {*} commit
  */
 async function createRelease (context, config, commit, robot) {
-  const { currentVersion, nextVersion } = await getVersions(context, config, commit)
+  const { currentVersion, nextVersion } = await getVersions(context, config, commit, robot)
   const { owner, repo } = utils.getRepo(context)
 
   const options = {
@@ -178,7 +178,7 @@ async function createRelease (context, config, commit, robot) {
  * @param {*} config
  * @param {*} commit
  */
-async function getVersions (context, config, commit) {
+async function getVersions (context, config, commit, robot) {
   const lastTag = (await context.github.repos.getTags(utils.getRepo(context))).data[0]
 
   // TODO: Consider what to do when there are no tags. Fallback to npm?
