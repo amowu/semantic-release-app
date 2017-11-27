@@ -27,7 +27,6 @@ module.exports = (robot) => {
     if (context.payload.ref !== 'refs/heads/master') return
 
     const config = await getConfig(context)
-    robot.log('getConfig')
     const commit = detectChange(context, config)
     // Check if commit needs GitHub Release,
     // otherwise the bot should not do anything
@@ -48,11 +47,16 @@ module.exports = (robot) => {
  */
 function detectChange (context, config) {
   const head = context.payload.head_commit
+  robot.log(`head: ${head}`)
   const rawCommit = detectNext(head.message, true)
+  robot.log(`rawCommit: ${rawCommit}`)
 
   const shortSHA = head.id.slice(0, 7)
+  robot.log(`shortSHA: ${shortSHA}`)
   const repository = context.payload.repository.full_name
+  robot.log(`repository: ${repository}`)
   const link = `https://github.com/${repository}/commit/${shortSHA}`
+  robot.log(`link: ${link}`)
   const commit = Object.assign(rawCommit, {
     anchor: `[${shortSHA}](${link})`,
     message: head.message,
