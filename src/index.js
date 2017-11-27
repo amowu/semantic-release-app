@@ -23,15 +23,15 @@ module.exports = (robot) => {
   robot.on('push', async (context) => {
     //robot.log(`releasePublished: ${releasePublished}`);
     // if (releasePublished === true) return
-    robot.log(`context.payload.ref: ${context.payload.ref}`);
+    robot.log(`context.payload.ref: ${context.payload.ref}`)
     if (context.payload.ref !== 'refs/heads/master') return
 
     const config = await getConfig(context)
-    robot.log(`config: ${config}`);
+    robot.log('getConfig')
     const commit = detectChange(context, config)
-    robot.log(`commit: ${commit}`);
     // Check if commit needs GitHub Release,
     // otherwise the bot should not do anything
+    robot.log(`commit.increment: ${commit.increment}`)
     if (commit.increment) {
       robot.log('cc3')
       const passed = []
