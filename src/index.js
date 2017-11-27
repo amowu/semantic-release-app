@@ -46,6 +46,7 @@ module.exports = (robot) => {
  * @param {*} config
  */
 function detectChange (context, config) {
+  robot.log('detectChange')
   const head = context.payload.head_commit
   robot.log(`head: ${head}`)
   const rawCommit = detectNext(head.message, true)
