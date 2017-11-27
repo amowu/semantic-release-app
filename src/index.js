@@ -27,7 +27,7 @@ module.exports = (robot) => {
     if (context.payload.ref !== 'refs/heads/master') return
 
     const config = await getConfig(context, robot)
-    const commit = detectChange(context, config)
+    const commit = detectChange(context, config, robot)
     // Check if commit needs GitHub Release,
     // otherwise the bot should not do anything
     robot.log(`commit.increment: ${commit.increment}`)
@@ -35,7 +35,7 @@ module.exports = (robot) => {
       robot.log('cc3')
       const passed = []
       const pending = []
-      await release(context, config, { passed, pending })
+      await release(context, config, { passed, pending }, robot)
     }
   })
 }
@@ -45,7 +45,7 @@ module.exports = (robot) => {
  * @param {*} context
  * @param {*} config
  */
-function detectChange (context, config) {
+function detectChange (context, config, robot) {
   robot.log('detectChange')
   const head = context.payload.head_commit
   robot.log(`head: ${head}`)
@@ -85,9 +85,9 @@ function detectChange (context, config) {
  * @param {*} config
  * @param {*} cache
  */
-async function release (context, config, cache) {
+async function release (context, config, cache, robot) {
   if (cache.passed.length && cache.passed.length === cache.pending.length) {
-    return shouldRelease(context, config)
+    return shouldRelease(context, config, robot)
   }
 
   // Especially in CircleCI builds are pretty fast
@@ -121,7 +121,7 @@ async function release (context, config, cache) {
  * @param {*} context
  * @param {*} config
  */
-function shouldRelease (context, config) {
+function shouldRelease (context, config, robot) {
   const commit = detectChange(context, config)
 
   if (!commit.increment) {
@@ -129,7 +129,7 @@ function shouldRelease (context, config) {
     return false
   }
 
-  return createRelease(context, config, commit)
+  return createRelease(context, config, commit, robot)
 }
 
 /**
@@ -138,7 +138,7 @@ function shouldRelease (context, config) {
  * @param {*} config
  * @param {*} commit
  */
-async function createRelease (context, config, commit) {
+async function createRelease (context, config, commit, robot) {
   const { currentVersion, nextVersion } = await getVersions(context, config, commit)
   const { owner, repo } = utils.getRepo(context)
 
@@ -149,7 +149,7 @@ async function createRelease (context, config, commit) {
     owner,
     repo,
   }
-  const body = await renderTemplate(context, config, options)
+  const body = await renderTemplate(context, config, options, robot)
 
   const tagName = `v${nextVersion}`
 
@@ -192,7 +192,7 @@ async function getVersions (context, config, commit) {
  * @param {*} config
  * @param {*} opts
  */
-async function renderTemplate (context, config, opts) {
+async function renderTemplate (context, config, opts, robot) {
   let template = config.releaseTemplate
 
   if (typeof config.templatePath === 'string') {
