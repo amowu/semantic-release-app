@@ -27,7 +27,9 @@ module.exports = (robot) => {
     if (context.payload.ref !== 'refs/heads/master') return
 
     const config = await getConfig(context)
+    robot.log(`config: ${config}`);
     const commit = detectChange(context, config)
+    robot.log(`commit: ${commit}`);
     // Check if commit needs GitHub Release,
     // otherwise the bot should not do anything
     if (commit.increment) {
