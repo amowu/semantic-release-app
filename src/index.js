@@ -126,7 +126,7 @@ async function release (context, config, cache, robot) {
  * @param {*} config
  */
 function shouldRelease (context, config, robot) {
-  const commit = detectChange(context, config)
+  const commit = detectChange(context, config, robot)
 
   if (!commit.increment) {
     robot.log('no creating GitHub release')
