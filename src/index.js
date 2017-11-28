@@ -86,10 +86,10 @@ function detectChange (context, config, robot) {
  * @param {*} cache
  */
 async function release (context, config, cache, robot) {
-  if (cache.passed.length && cache.passed.length === cache.pending.length) {
+  //if (cache.passed.length && cache.passed.length === cache.pending.length) {
     robot.log('shouldRelease')
     return shouldRelease(context, config, robot)
-  }
+  //}
 
   // Especially in CircleCI builds are pretty fast
   // even with tons of deps.. but make sure your cache
