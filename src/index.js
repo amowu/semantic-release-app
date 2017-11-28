@@ -49,7 +49,9 @@ function detectChange (context, config, robot) {
   robot.log('detectChange')
   const head = context.payload.head_commit
   robot.log(`head: ${head}`)
-  const rawCommit = detectNext(head.message, true)
+  // TODO: test for invalidate commit message
+  // const rawCommit = detectNext(head.message, true)
+  const rawCommit = detectNext(head.message)
   robot.log(`rawCommit: ${rawCommit}`)
 
   const shortSHA = head.id.slice(0, 7)
